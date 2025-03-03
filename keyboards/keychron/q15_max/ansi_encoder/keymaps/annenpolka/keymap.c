@@ -30,11 +30,13 @@ enum layers {
     COM_FN,
 };
 
-enum custom_keycodes {
-    ALT_TAB = SAFE_RANGE,
+// QK_KB領域にカスタムキーコードを定義（Keychron固有領域）
+enum kb_keycodes {
+    // Keychron共通キーコードの続きから定義
+    ALT_TAB = NEW_SAFE_RANGE,
     CTRL_TAB,
     SELWORD,
-    // Orbital Mouseのカスタムキーコード（ユーザー領域に配置）
+    // Orbital Mouseのカスタムキーコード
     OM_FORWARD,  // 前進
     OM_BACKWARD, // 後退
     OM_LEFT,     // 左回転
@@ -44,6 +46,11 @@ enum custom_keycodes {
     OM_BTN2_KC,  // マウス右ボタン
     OM_WHEEL_UP, // ホイール上
     OM_WHEEL_DOWN // ホイール下
+};
+
+// SAFE_RANGEからのカスタムキーコードは削除（QK_KB領域に移行）
+enum custom_keycodes {
+    PLACEHOLDER = SAFE_RANGE // 将来必要になったときのためのプレースホルダー
 };
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {

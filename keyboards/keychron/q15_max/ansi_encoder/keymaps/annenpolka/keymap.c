@@ -33,6 +33,17 @@ enum layers {
 enum custom_keycodes {
     ALT_TAB = SAFE_RANGE,
     CTRL_TAB,
+    SELWORD,
+    // Orbital Mouseのカスタムキーコード（ユーザー領域に配置）
+    OM_FORWARD,  // 前進
+    OM_BACKWARD, // 後退
+    OM_LEFT,     // 左回転
+    OM_RIGHT,    // 右回転
+    OM_SNIPE,    // 低速モード
+    OM_BTN1_KC,  // マウス左ボタン
+    OM_BTN2_KC,  // マウス右ボタン
+    OM_WHEEL_UP, // ホイール上
+    OM_WHEEL_DOWN // ホイール下
 };
 // clang-format off
 const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
@@ -85,12 +96,100 @@ const uint16_t PROGMEM encoder_map[][2][2] = {
 
 
 // Super Alt+Tab/Ctrl+Tab機能の実装
+#include "features/select_word.h"
+#include "features/orbital_mouse.h" // エラー修正済み
+
+// Select Word機能のキーコード設定
+uint16_t SELECT_WORD_KEYCODE = SELWORD;
+
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
+    // Orbital Mouse機能の処理（標準のマウスキーコード用）
+    if (!process_orbital_mouse(keycode, record)) {
+        return false;
+    }
+    
+    // Select Word機能の処理
+    if (!process_select_word(keycode, record)) {
+        return false;
+    }
+
     if (!process_record_keychron_common(keycode, record)) {
         return false;
     }
     
     switch (keycode) {
+        // Orbital Mouseのカスタムキーコード処理
+        case OM_FORWARD:
+            if (record->event.pressed) {
+                register_code(OM_U); // OM_U（KC_MS_UP）をエミュレート
+            } else {
+                unregister_code(OM_U);
+            }
+            return false;
+            
+        case OM_BACKWARD:
+            if (record->event.pressed) {
+                register_code(OM_D); // OM_D（KC_MS_DOWN）をエミュレート
+            } else {
+                unregister_code(OM_D);
+            }
+            return false;
+            
+        case OM_LEFT:
+            if (record->event.pressed) {
+                register_code(OM_L); // OM_L（KC_MS_LEFT）をエミュレート
+            } else {
+                unregister_code(OM_L);
+            }
+            return false;
+            
+        case OM_RIGHT:
+            if (record->event.pressed) {
+                register_code(OM_R); // OM_R（KC_MS_RIGHT）をエミュレート
+            } else {
+                unregister_code(OM_R);
+            }
+            return false;
+            
+        case OM_SNIPE:
+            if (record->event.pressed) {
+                register_code(OM_SLOW); // OM_SLOW（KC_MS_BTN4）をエミュレート
+            } else {
+                unregister_code(OM_SLOW);
+            }
+            return false;
+            
+        case OM_BTN1_KC:
+            if (record->event.pressed) {
+                register_code(OM_BTN1); // OM_BTN1（KC_MS_BTN1）をエミュレート
+            } else {
+                unregister_code(OM_BTN1);
+            }
+            return false;
+            
+        case OM_BTN2_KC:
+            if (record->event.pressed) {
+                register_code(OM_BTN2); // OM_BTN2（KC_MS_BTN2）をエミュレート
+            } else {
+                unregister_code(OM_BTN2);
+            }
+            return false;
+            
+        case OM_WHEEL_UP:
+            if (record->event.pressed) {
+                register_code(OM_W_U); // OM_W_U（KC_MS_WH_UP）をエミュレート
+            } else {
+                unregister_code(OM_W_U);
+            }
+            return false;
+            
+        case OM_WHEEL_DOWN:
+            if (record->event.pressed) {
+                register_code(OM_W_D); // OM_W_D（KC_MS_WH_DOWN）をエミュレート
+            } else {
+                unregister_code(OM_W_D);
+            }
+            return false;
         case ALT_TAB:
             if (record->event.pressed) {
                 if (!is_alt_tab_active) {
@@ -119,7 +218,9 @@ bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     return true;
 }
 
-// Super Alt+Tab/Ctrl+Tab機能のタイマー処理
+// config.hに移動
+
+// Super Alt+Tab/Ctrl+Tab機能のタイマー処理とSelect Word機能のタイムアウト処理
 void matrix_scan_user(void) {
     if (is_alt_tab_active) {
         if (timer_elapsed(alt_tab_timer) > 1000) {
@@ -134,4 +235,10 @@ void matrix_scan_user(void) {
             is_ctrl_tab_active = false;
         }
     }
+}
+
+// Select WordとOrbital Mouse機能のタスク処理
+void housekeeping_task_user(void) {
+    select_word_task();
+    orbital_mouse_task(); // エラー修正済み
 }

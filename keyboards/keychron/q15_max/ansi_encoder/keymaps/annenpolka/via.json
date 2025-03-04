@@ -84,16 +84,7 @@
     {"name": "~", "title": "~", "shortName": "~"},
     {"name": "Alt+Tab", "title": "Alt+Tab 押しっぱなし機能", "shortName": "AltTab"},
     {"name": "Ctrl+Tab", "title": "Ctrl+Tab 押しっぱなし機能", "shortName": "CtrlTab"},
-    {"name": "Select Word", "title": "単語選択機能", "shortName": "SelWrd"},
-    {"name": "OM Forward", "title": "Orbital Mouse 前進", "shortName": "OM Fwd"},
-    {"name": "OM Backward", "title": "Orbital Mouse 後退", "shortName": "OM Bwd"},
-    {"name": "OM Left", "title": "Orbital Mouse 左回転", "shortName": "OM Left"},
-    {"name": "OM Right", "title": "Orbital Mouse 右回転", "shortName": "OM Right"},
-    {"name": "OM Snipe", "title": "Orbital Mouse 低速モード", "shortName": "OM Snipe"},
-    {"name": "OM Left Click", "title": "Orbital Mouse 左クリック", "shortName": "OM LClk"},
-    {"name": "OM Right Click", "title": "Orbital Mouse 右クリック", "shortName": "OM RClk"},
-    {"name": "OM Wheel Up", "title": "Orbital Mouse ホイール上", "shortName": "OM WUp"},
-    {"name": "OM Wheel Down", "title": "Orbital Mouse ホイール下", "shortName": "OM WDn"}
+    {"name": "Select Word", "title": "単語選択機能", "shortName": "SelWrd"}
   ],
   "matrix": {"rows": 5, "cols": 14},
   "layouts": {

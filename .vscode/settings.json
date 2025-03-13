@@ -31,5 +31,6 @@
     "clangd.arguments": [
         "--header-insertion=never"
     ],
-    "makefile.configureOnOpen": true
+    "makefile.configureOnOpen": true,
+    "cmake.sourceDirectory": "/Users/annenpolka/junks/qmk_firmware_keychron/lib/googletest"
 }

@@ -36,16 +36,7 @@ enum kb_keycodes {
     ALT_TAB = NEW_SAFE_RANGE,
     CTRL_TAB,
     SELWORD,
-    // Orbital Mouseのカスタムキーコード
-    OM_FORWARD,  // 前進
-    OM_BACKWARD, // 後退
-    OM_LEFT,     // 左回転
-    OM_RIGHT,    // 右回転
-    OM_SNIPE,    // 低速モード
-    OM_BTN1_KC,  // マウス左ボタン
-    OM_BTN2_KC,  // マウス右ボタン
-    OM_WHEEL_UP, // ホイール上
-    OM_WHEEL_DOWN // ホイール下
+    // 将来の拡張用
 };
 
 // SAFE_RANGEからのカスタムキーコードは削除（QK_KB領域に移行）
@@ -57,14 +48,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC_BASE] = LAYOUT_ansi_66(
         KC_MUTE,  KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,   KC_BSPC,  KC_MUTE,
         KC_ESC,   KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,   KC_RBRC,  KC_BSLS,
-        KC_CAPS,  KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,   KC_ENT,
+        KC_CAPS,  LGUI_T(KC_A), LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F), KC_G, KC_H, RSFT_T(KC_J), RCTL_T(KC_K), RALT_T(KC_L), RGUI_T(KC_SCLN), KC_QUOT, KC_ENT,
         KC_LSFT,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_RSFT,   KC_UP,	   KC_DEL,
         KC_LCTL,  KC_LOPTN, KC_LCMMD, _______,  KC_SPC,                       KC_SPC,             MO(MAC_FN),MO(COM_FN),KC_LEFT, KC_DOWN,  KC_RGHT),
 
     [WIN_BASE] = LAYOUT_ansi_66(
         KC_MUTE,  KC_1,     KC_2,     KC_3,     KC_4,     KC_5,     KC_6,     KC_7,     KC_8,     KC_9,     KC_0,     KC_MINS,   KC_BSPC,  KC_MUTE,
         KC_ESC,   KC_Q,     KC_W,     KC_E,     KC_R,     KC_T,     KC_Y,     KC_U,     KC_I,     KC_O,     KC_P,     KC_LBRC,   KC_RBRC,  KC_BSLS,
-        KC_CAPS,  KC_A,     KC_S,     KC_D,     KC_F,     KC_G,     KC_H,     KC_J,     KC_K,     KC_L,     KC_SCLN,  KC_QUOT,   KC_ENT,
+        KC_CAPS,  LGUI_T(KC_A), LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F), KC_G, KC_H, RSFT_T(KC_J), RCTL_T(KC_K), RALT_T(KC_L), RGUI_T(KC_SCLN), KC_QUOT, KC_ENT,
         KC_LSFT,  KC_Z,     KC_X,     KC_C,     KC_V,     KC_B,     KC_N,     KC_M,     KC_COMM,  KC_DOT,   KC_SLSH,  KC_RSFT,   KC_UP,    KC_DEL,
         KC_LCTL,  KC_LGUI,  KC_LALT,  _______,  KC_SPC,                       KC_SPC,             MO(WIN_FN),MO(COM_FN),KC_LEFT, KC_DOWN,  KC_RGHT),
 
@@ -104,99 +95,46 @@ const uint16_t PROGMEM encoder_map[][2][2] = {
 
 // Super Alt+Tab/Ctrl+Tab機能の実装
 #include "features/select_word.h"
-#include "features/orbital_mouse.h" // エラー修正済み
+//取り除き: #include "features/orbital_mouse.h"
 
 // Select Word機能のキーコード設定
 uint16_t SELECT_WORD_KEYCODE = SELWORD;
 
-bool process_record_user(uint16_t keycode, keyrecord_t *record) {
-    // Orbital Mouse機能の処理（標準のマウスキーコード用）
-    if (!process_orbital_mouse(keycode, record)) {
-        return false;
+// HOLD_ON_OTHER_KEY_PRESS_PER_KEYのための関数
+bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
+    switch (keycode) {
+        // 左手ホームロー: GACS (GUI,ALT,CTRL,SHIFT) 順
+        case LGUI_T(KC_A):  // A - GUI (Command/Windows)
+        case LALT_T(KC_S):  // S - ALT (Option)
+        case LCTL_T(KC_D):  // D - CTRL
+        case LSFT_T(KC_F):  // F - SHIFT
+
+        // 右手ホームロー: SCAG (SHIFT,CTRL,ALT,GUI) 順（左の逆順）
+        case RSFT_T(KC_J):  // J - SHIFT
+        case RCTL_T(KC_K):  // K - CTRL
+        case RALT_T(KC_L):  // L - ALT (Option)
+        case RGUI_T(KC_SCLN): // ; - GUI (Command/Windows)
+            return false;  // ホームローモディファイアはHOLD_ON_OTHER_KEY_PRESSを使用しない
+
+        default:
+            return true;   // それ以外のキーには適用する
     }
-    
+}
+
+// ユーザー定義のキー処理
+bool process_record_user(uint16_t keycode, keyrecord_t *record) {
     // Select Word機能の処理
     if (!process_select_word(keycode, record)) {
         return false;
     }
 
+    // Keychron共通処理
     if (!process_record_keychron_common(keycode, record)) {
         return false;
     }
-    
+
+    // カスタムキーコード処理
     switch (keycode) {
-        // Orbital Mouseのカスタムキーコード処理
-        case OM_FORWARD:
-            if (record->event.pressed) {
-                register_code(OM_U); // OM_U（KC_MS_UP）をエミュレート
-            } else {
-                unregister_code(OM_U);
-            }
-            return false;
-            
-        case OM_BACKWARD:
-            if (record->event.pressed) {
-                register_code(OM_D); // OM_D（KC_MS_DOWN）をエミュレート
-            } else {
-                unregister_code(OM_D);
-            }
-            return false;
-            
-        case OM_LEFT:
-            if (record->event.pressed) {
-                register_code(OM_L); // OM_L（KC_MS_LEFT）をエミュレート
-            } else {
-                unregister_code(OM_L);
-            }
-            return false;
-            
-        case OM_RIGHT:
-            if (record->event.pressed) {
-                register_code(OM_R); // OM_R（KC_MS_RIGHT）をエミュレート
-            } else {
-                unregister_code(OM_R);
-            }
-            return false;
-            
-        case OM_SNIPE:
-            if (record->event.pressed) {
-                register_code(OM_SLOW); // OM_SLOW（KC_MS_BTN4）をエミュレート
-            } else {
-                unregister_code(OM_SLOW);
-            }
-            return false;
-            
-        case OM_BTN1_KC:
-            if (record->event.pressed) {
-                register_code(OM_BTN1); // OM_BTN1（KC_MS_BTN1）をエミュレート
-            } else {
-                unregister_code(OM_BTN1);
-            }
-            return false;
-            
-        case OM_BTN2_KC:
-            if (record->event.pressed) {
-                register_code(OM_BTN2); // OM_BTN2（KC_MS_BTN2）をエミュレート
-            } else {
-                unregister_code(OM_BTN2);
-            }
-            return false;
-            
-        case OM_WHEEL_UP:
-            if (record->event.pressed) {
-                register_code(OM_W_U); // OM_W_U（KC_MS_WH_UP）をエミュレート
-            } else {
-                unregister_code(OM_W_U);
-            }
-            return false;
-            
-        case OM_WHEEL_DOWN:
-            if (record->event.pressed) {
-                register_code(OM_W_D); // OM_W_D（KC_MS_WH_DOWN）をエミュレート
-            } else {
-                unregister_code(OM_W_D);
-            }
-            return false;
         case ALT_TAB:
             if (record->event.pressed) {
                 if (!is_alt_tab_active) {
@@ -235,7 +173,7 @@ void matrix_scan_user(void) {
             is_alt_tab_active = false;
         }
     }
-    
+
     if (is_ctrl_tab_active) {
         if (timer_elapsed(ctrl_tab_timer) > 1000) {
             unregister_code(KC_LCTL);
@@ -244,8 +182,7 @@ void matrix_scan_user(void) {
     }
 }
 
-// Select WordとOrbital Mouse機能のタスク処理
+// Select Word機能のタスク処理
 void housekeeping_task_user(void) {
     select_word_task();
-    orbital_mouse_task(); // エラー修正済み
 }

@@ -20,9 +20,10 @@
 #define SELECT_WORD_TIMEOUT 2000  // 2秒のアイドルタイムアウト
 
 /* タップホールド設定 */
-#define TAPPING_TERM 200
+#define TAPPING_TERM 180
 #define PERMISSIVE_HOLD
-#define HOLD_ON_OTHER_KEY_PRESS
+// #define HOLD_ON_OTHER_KEY_PRESS
+#define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
 
 /* Orbital Mouse設定 */
 #define ORBITAL_MOUSE_RADIUS 36

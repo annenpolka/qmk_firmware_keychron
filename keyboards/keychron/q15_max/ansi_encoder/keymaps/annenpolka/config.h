@@ -25,6 +25,9 @@
 // #define HOLD_ON_OTHER_KEY_PRESS
 #define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
 
+/* コンボ機能の設定 */
+#define COMBO_TERM 50  // コンボを認識する時間（ミリ秒）
+
 /* Orbital Mouse設定 */
 #define ORBITAL_MOUSE_RADIUS 36
 #define ORBITAL_MOUSE_SPEED_CURVE \

@@ -20,7 +20,7 @@
 #define SELECT_WORD_TIMEOUT 2000  // 2秒のアイドルタイムアウト
 
 /* タップホールド設定 */
-#define TAPPING_TERM 180
+#define TAPPING_TERM 200
 #define PERMISSIVE_HOLD
 // #define HOLD_ON_OTHER_KEY_PRESS
 #define HOLD_ON_OTHER_KEY_PRESS_PER_KEY
@@ -28,10 +28,3 @@
 /* コンボ機能の設定 */
 #define COMBO_TERM 50  // コンボを認識する時間（ミリ秒）
 
-/* Orbital Mouse設定 */
-#define ORBITAL_MOUSE_RADIUS 36
-#define ORBITAL_MOUSE_SPEED_CURVE \
-      {24, 24, 24, 32, 58, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66, 66}
-#define ORBITAL_MOUSE_SLOW_MOVE_FACTOR 0.333
-#define ORBITAL_MOUSE_SLOW_TURN_FACTOR 0.5
-#define ORBITAL_MOUSE_WHEEL_SPEED 0.2

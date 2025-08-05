@@ -81,7 +81,6 @@
     {"name": "Bluetooth Host 3", "title": "Bluetooth Host 3", "shortName": "BTH3"},
     {"name": "2.4G", "title": "2.4G", "shortName": "2.4G"},
     {"name": "Battery Level", "title": "Show battery level", "shortName": "Batt"},
-    {"name": "~", "title": "~", "shortName": "~"},
     {"name": "Alt+Tab", "title": "Alt+Tab 押しっぱなし機能", "shortName": "AltTab"},
     {"name": "Ctrl+Tab", "title": "Ctrl+Tab 押しっぱなし機能", "shortName": "CtrlTab"},
     {"name": "Select Word", "title": "単語選択機能", "shortName": "SelWrd"}

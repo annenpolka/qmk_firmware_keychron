@@ -25,8 +25,8 @@ enum combo_events {
     COMBO_LENGTH
 };
 
-const uint16_t PROGMEM fd_combo[] = {LSFT_T(KC_F), LCTL_T(KC_D), COMBO_END};
-const uint16_t PROGMEM jk_combo[] = {RSFT_T(KC_J), RCTL_T(KC_K), COMBO_END};
+const uint16_t PROGMEM fd_combo[] = {KC_F, KC_D, COMBO_END};
+const uint16_t PROGMEM jk_combo[] = {KC_J, KC_K, COMBO_END};
 
 combo_t key_combos[] = {
     [FD_ESC_COMBO] = COMBO(fd_combo, KC_LNG2),  // fdで英数キー
@@ -65,14 +65,14 @@ const uint16_t PROGMEM keymaps[][MATRIX_ROWS][MATRIX_COLS] = {
     [MAC_BASE] = LAYOUT_ansi_66(
         KC_MUTE,    KC_1,         KC_2,         KC_3,         KC_4,         KC_5,         KC_6,         KC_7,         KC_8,         KC_9,         KC_0,         KC_MINS,      KC_BSPC,      KC_MUTE,
         KC_ESC,     KC_Q,         KC_W,         KC_E,         KC_R,         KC_T,         KC_Y,         KC_U,         KC_I,         KC_O,         KC_P,         KC_LBRC,      KC_RBRC,      KC_BSLS,
-        KC_CAPS,    LGUI_T(KC_A), LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F), KC_G,         KC_H,         RSFT_T(KC_J), RCTL_T(KC_K), RALT_T(KC_L), RGUI_T(KC_SCLN), KC_QUOT,   KC_ENT,
+        KC_CAPS,    KC_A,         KC_S,         KC_D,         KC_F,         KC_G,         KC_H,         KC_J,         KC_K,         KC_L,         KC_SCLN,      KC_QUOT,      KC_ENT,
         KC_LSFT,    KC_Z,         KC_X,         KC_C,         KC_V,         KC_B,         KC_N,         KC_M,         KC_COMM,      KC_DOT,       KC_SLSH,      KC_RSFT,      KC_UP,        KC_DEL,
         KC_LCTL,    KC_LOPTN,     KC_LCMMD,     _______,      KC_SPC,                                   KC_SPC,                     MO(MAC_FN),   MO(COM_FN),   KC_LEFT,      KC_DOWN,      KC_RGHT),
 
     [WIN_BASE] = LAYOUT_ansi_66(
         KC_MUTE,    KC_1,         KC_2,         KC_3,         KC_4,         KC_5,         KC_6,         KC_7,         KC_8,         KC_9,         KC_0,         KC_MINS,      KC_BSPC,      KC_MUTE,
         KC_ESC,     KC_Q,         KC_W,         KC_E,         KC_R,         KC_T,         KC_Y,         KC_U,         KC_I,         KC_O,         KC_P,         KC_LBRC,      KC_RBRC,      KC_BSLS,
-        KC_CAPS,    LGUI_T(KC_A), LALT_T(KC_S), LCTL_T(KC_D), LSFT_T(KC_F), KC_G,         KC_H,         RSFT_T(KC_J), RCTL_T(KC_K), RALT_T(KC_L), RGUI_T(KC_SCLN), KC_QUOT,   KC_ENT,
+        KC_CAPS,    KC_A,         KC_S,         KC_D,         KC_F,         KC_G,         KC_H,         KC_J,         KC_K,         KC_L,         KC_SCLN,      KC_QUOT,      KC_ENT,
         KC_LSFT,    KC_Z,         KC_X,         KC_C,         KC_V,         KC_B,         KC_N,         KC_M,         KC_COMM,      KC_DOT,       KC_SLSH,      KC_RSFT,      KC_UP,        KC_DEL,
         KC_LCTL,    KC_LGUI,      KC_LALT,      _______,      KC_SPC,                                   KC_SPC,                     MO(WIN_FN),   MO(COM_FN),   KC_LEFT,      KC_DOWN,      KC_RGHT),
 
@@ -117,26 +117,6 @@ const uint16_t PROGMEM encoder_map[][2][2] = {
 // Select Word機能のキーコード設定
 uint16_t SELECT_WORD_KEYCODE = SELWORD;
 
-// HOLD_ON_OTHER_KEY_PRESS_PER_KEYのための関数
-bool get_hold_on_other_key_press(uint16_t keycode, keyrecord_t *record) {
-    switch (keycode) {
-        // 左手ホームロー: GACS (GUI,ALT,CTRL,SHIFT) 順
-        case LGUI_T(KC_A):  // A - GUI (Command/Windows)
-        case LALT_T(KC_S):  // S - ALT (Option)
-        case LCTL_T(KC_D):  // D - CTRL
-        case LSFT_T(KC_F):  // F - SHIFT
-
-        // 右手ホームロー: SCAG (SHIFT,CTRL,ALT,GUI) 順（左の逆順）
-        case RSFT_T(KC_J):  // J - SHIFT
-        case RCTL_T(KC_K):  // K - CTRL
-        case RALT_T(KC_L):  // L - ALT (Option)
-        case RGUI_T(KC_SCLN): // ; - GUI (Command/Windows)
-            return false;  // ホームローモディファイアはHOLD_ON_OTHER_KEY_PRESSを使用しない
-
-        default:
-            return true;   // それ以外のキーには適用する
-    }
-}
 
 // ユーザー定義のキー処理
 bool process_record_user(uint16_t keycode, keyrecord_t *record) {
